@@ -1,19 +1,13 @@
-// plot_speedup.c — Calcula speedup/eficiencia y grafica con gnuplot desde C
-// Compila: gcc -O2 plot_speedup.c -o plot_speedup
-// Ejecuta: ./plot_speedup
-// Salida: resultados.csv, speedup.png, efficiency.png
-
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(void) {
-    // Tus últimos datos medidos
     int p[]        = {1, 2, 4, 8, 12};
     double time_s[] = {0.009780, 0.004915, 0.002446, 0.002161, 0.001420};
     int n = (int)(sizeof(p) / sizeof(p[0]));
     double T1 = time_s[0];
 
-    // 1) Escribir CSV con speedup y eficiencia
+    // Escribir CSV con speedup y eficiencia
     FILE *csv = fopen("resultados.csv", "w");
     if (!csv) { perror("No se pudo crear resultados.csv"); return 1; }
     fprintf(csv, "p,time_s,speedup,efficiency\n");
@@ -30,7 +24,7 @@ int main(void) {
     }
     fclose(csv);
 
-    // 2) Abrir gnuplot por tubería y dibujar SPEEDUP
+    // Abrir gnuplot por tubería y dibujar SPEEDUP
     FILE *gp = popen("gnuplot -persist", "w");
     if (!gp) { fprintf(stderr, "No se pudo invocar gnuplot. ¿Está instalado?\n"); return 1; }
 
@@ -57,7 +51,7 @@ int main(void) {
     fflush(gp);
     pclose(gp);
 
-    // 3) Imprimir tabla bonita en consola (opcional)
+    // Imprimir tabla bonita en consola (opcional)
     printf("p\ttiempo(s)\tspeedup\teficiencia\n");
     for (int i = 0; i < n; i++) {
         printf("%d\t%.6f\t%.3f\t%.3f\n", p[i], time_s[i], speedup[i], eff[i]);
